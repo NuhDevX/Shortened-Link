@@ -1,2 +1,2 @@
 # Shortened-Link
-Website biasa 
+Website yang bisa memendekan link
