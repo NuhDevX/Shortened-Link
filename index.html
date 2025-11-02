@@ -7,14 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .animate-fadeIn {
             animation: fadeIn 0.5s ease-out;
@@ -25,80 +19,107 @@
         .animate-spin {
             animation: spin 1s linear infinite;
         }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s ease-in-out infinite;
+        }
+        body {
+            background: linear-gradient(to bottom, #0a0e27 0%, #1a1a3e 50%, #2d1b4e 100%);
+            position: relative;
+            overflow-x: hidden;
+        }
     </style>
 </head>
-<body class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-    <div class="flex items-center justify-center min-h-screen p-4">
-        <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
-            <div class="flex items-center justify-center mb-6">
-                <div class="bg-indigo-600 p-3 rounded-full">
+<body class="min-h-screen">
+    <!-- Stars Background -->
+    <div id="stars"></div>
+
+    <div class="flex items-center justify-center min-h-screen p-4 relative z-10">
+        <div class="bg-gradient-to-br from-purple-900/40 to-blue-900/40 backdrop-blur-md rounded-2xl shadow-2xl p-8 w-full max-w-md border border-purple-500/30">
+            <div class="flex items-center justify-center mb-6 animate-float">
+                <div class="bg-gradient-to-br from-purple-600 to-blue-600 p-4 rounded-full shadow-lg shadow-purple-500/50">
                     <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
                     </svg>
                 </div>
             </div>
             
-            <h1 class="text-3xl font-bold text-center text-gray-800 mb-2">
-                Pemendek Link
+            <h1 class="text-3xl font-bold text-center text-white mb-2">
+                🚀 Pemendek Link
             </h1>
-            <p class="text-center text-gray-600 mb-8">
-                Buat link pendek yang mudah dibagikan
+            <p class="text-center text-purple-200 mb-8">
+                Jelajahi internet dengan link yang lebih singkat
             </p>
 
             <div class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Link yang akan dipendekkan
+                    <label class="block text-sm font-medium text-purple-200 mb-2">
+                        🌐 Link yang akan dipendekkan
                     </label>
                     <input
-                        type="url"
+                        type="text"
                         id="originalUrl"
-                        placeholder="https://contoh.com/link-panjang-sekali"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+                        placeholder="google.com atau https://example.com"
+                        class="w-full px-4 py-3 bg-purple-900/30 border border-purple-500/50 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition text-white placeholder-purple-300/50"
                     />
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Nama link custom
+                    <label class="block text-sm font-medium text-purple-200 mb-2">
+                        ✨ Nama link custom
                     </label>
-                    <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-indigo-500">
-                        <span class="px-3 py-3 bg-gray-100 text-gray-600 text-sm" id="domainPrefix">
+                    <div class="flex items-center bg-purple-900/30 border border-purple-500/50 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-purple-500">
+                        <span class="px-3 py-3 bg-purple-800/50 text-purple-200 text-sm" id="domainPrefix">
                             loading.../
                         </span>
                         <input
                             type="text"
                             id="customName"
                             placeholder="nama-link"
-                            class="flex-1 px-3 py-3 outline-none"
+                            class="flex-1 px-3 py-3 outline-none bg-transparent text-white placeholder-purple-300/50"
                         />
                     </div>
                 </div>
 
-                <div id="errorMsg" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+                <div id="errorMsg" class="hidden bg-red-900/50 border border-red-500/50 text-red-200 px-4 py-3 rounded-lg text-sm">
                 </div>
 
                 <button
                     id="generateBtn"
-                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    class="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-3 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-purple-500/50"
                 >
-                    Generate
+                    🚀 Generate
                 </button>
 
                 <div id="loadingDiv" class="hidden flex justify-center py-4">
-                    <div class="animate-spin rounded-full h-10 w-10 border-4 border-indigo-200 border-t-indigo-600"></div>
+                    <div class="animate-spin rounded-full h-10 w-10 border-4 border-purple-500/30 border-t-purple-500"></div>
                 </div>
 
-                <div id="resultDiv" class="hidden mt-6 p-4 bg-green-50 border border-green-200 rounded-lg animate-fadeIn">
-                    <p class="text-sm text-gray-600 mb-2">Link pendek Anda:</p>
+                <div id="resultDiv" class="hidden mt-6 p-4 bg-green-900/30 border border-green-500/50 rounded-lg animate-fadeIn">
+                    <p class="text-sm text-green-200 mb-2">✅ Link pendek Anda:</p>
                     <div class="flex items-center gap-2">
-                        <div class="flex-1 bg-white px-4 py-3 rounded-lg border border-gray-300 break-all">
-                            <a id="shortenedLink" href="#" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:text-indigo-800 font-medium">
+                        <div class="flex-1 bg-purple-900/50 px-4 py-3 rounded-lg border border-purple-500/30 break-all">
+                            <a id="shortenedLink" href="#" target="_blank" rel="noopener noreferrer" class="text-purple-300 hover:text-purple-100 font-medium">
                             </a>
                         </div>
                         <button
                             id="copyBtn"
-                            class="bg-indigo-600 hover:bg-indigo-700 text-white p-3 rounded-lg transition"
+                            class="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white p-3 rounded-lg transition shadow-lg"
                             title="Copy link"
                         >
                             <svg id="copyIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -111,42 +132,63 @@
                     </div>
                     <button
                         id="resetBtn"
-                        class="mt-4 w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 rounded-lg transition text-sm"
+                        class="mt-4 w-full bg-purple-800/50 hover:bg-purple-700/50 text-purple-200 py-2 rounded-lg transition text-sm border border-purple-500/30"
                     >
-                        Buat Link Baru
+                        ➕ Buat Link Baru
                     </button>
                 </div>
             </div>
 
-            <div id="savedLinksDiv" class="hidden mt-8 pt-6 border-t border-gray-200">
-                <h3 class="text-sm font-semibold text-gray-700 mb-3">Link yang tersimpan:</h3>
-                <div id="savedLinksList" class="space-y-2 max-h-40 overflow-y-auto">
+            <div id="historyDiv" class="hidden mt-8 pt-6 border-t border-purple-500/30">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-sm font-semibold text-purple-200">📜 Riwayat Link</h3>
+                    <button id="clearHistoryBtn" class="text-xs text-red-400 hover:text-red-300 transition">
+                        🗑️ Hapus Semua
+                    </button>
+                </div>
+                <div id="historyList" class="space-y-2 max-h-60 overflow-y-auto">
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 100; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            starsContainer.appendChild(star);
+        }
+
         const domain = window.location.origin;
         let links = {};
+        let history = [];
+
         document.getElementById('domainPrefix').textContent = domain + '/';
-        async function loadLinks() {
+
+        function loadData() {
             try {
-                const result = await window.storage.get('url_links');
-                if (result && result.value) {
-                    links = JSON.parse(result.value);
-                    updateSavedLinksList();
-                }
+                const savedLinks = localStorage.getItem('url_links');
+                const savedHistory = localStorage.getItem('url_history');
+                
+                if (savedLinks) links = JSON.parse(savedLinks);
+                if (savedHistory) history = JSON.parse(savedHistory);
+                
+                updateHistoryList();
             } catch (err) {
-                console.log('No existing links found');
+                console.log('Error loading data:', err);
             }
         }
 
-        async function saveLinks() {
+        function saveData() {
             try {
-                await window.storage.set('url_links', JSON.stringify(links));
+                localStorage.setItem('url_links', JSON.stringify(links));
+                localStorage.setItem('url_history', JSON.stringify(history));
             } catch (err) {
-                console.error('Failed to save links:', err);
+                console.error('Failed to save:', err);
             }
         }
 
@@ -160,9 +202,25 @@
             }
         }
 
+        function normalizeUrl(url) {
+            url = url.trim();
+            
+            if (!url.match(/^[a-zA-Z]+:\/\//)) {
+                url = 'https://' + url;
+            }
+            
+            return url;
+        }
+
         function isValidUrl(url) {
+            const urlPattern = /^(https?:\/\/)?.+\..+/i;
+            if (!urlPattern.test(url)) {
+                return false;
+            }
+            
             try {
-                new URL(url);
+                const normalized = normalizeUrl(url);
+                new URL(normalized);
                 return true;
             } catch {
                 return false;
@@ -171,7 +229,7 @@
 
         function showError(message) {
             const errorDiv = document.getElementById('errorMsg');
-            errorDiv.textContent = message;
+            errorDiv.textContent = '❌ ' + message;
             errorDiv.classList.remove('hidden');
         }
 
@@ -179,11 +237,11 @@
             document.getElementById('errorMsg').classList.add('hidden');
         }
 
-        function updateSavedLinksList() {
-            const listDiv = document.getElementById('savedLinksList');
-            const containerDiv = document.getElementById('savedLinksDiv');
+        function updateHistoryList() {
+            const listDiv = document.getElementById('historyList');
+            const containerDiv = document.getElementById('historyDiv');
             
-            if (Object.keys(links).length === 0) {
+            if (history.length === 0) {
                 containerDiv.classList.add('hidden');
                 return;
             }
@@ -191,22 +249,50 @@
             containerDiv.classList.remove('hidden');
             listDiv.innerHTML = '';
 
-            Object.entries(links).forEach(([name, url]) => {
-                const linkItem = document.createElement('div');
-                linkItem.className = 'flex items-center justify-between bg-gray-50 px-3 py-2 rounded text-sm';
-                linkItem.innerHTML = `
-                    <span class="text-indigo-600 font-medium truncate">/${name}</span>
-                    <a href="${url}" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-gray-700" title="${url}">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                        </svg>
-                    </a>
+            [...history].reverse().forEach((item, index) => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'bg-purple-900/30 border border-purple-500/30 px-3 py-3 rounded-lg';
+                historyItem.innerHTML = `
+                    <div class="flex items-start justify-between gap-2 mb-1">
+                        <div class="flex-1 min-w-0">
+                            <div class="text-purple-300 font-medium text-sm truncate">/${item.name}</div>
+                            <div class="text-purple-400 text-xs truncate mt-1">${item.original}</div>
+                        </div>
+                        <div class="flex gap-1 flex-shrink-0">
+                            <button onclick="copyHistoryLink('${domain}/${item.name}')" class="text-purple-400 hover:text-purple-200 transition p-1" title="Copy">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                </svg>
+                            </button>
+                            <a href="${item.original}" target="_blank" class="text-purple-400 hover:text-purple-200 transition p-1" title="Buka">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="text-purple-500 text-xs">${item.date}</div>
                 `;
-                listDiv.appendChild(linkItem);
+                listDiv.appendChild(historyItem);
             });
         }
 
-        document.getElementById('generateBtn').addEventListener('click', async function() {
+        window.copyHistoryLink = function(link) {
+            navigator.clipboard.writeText(link);
+            showError('Link berhasil disalin! ✨');
+            setTimeout(hideError, 2000);
+        }
+
+        document.getElementById('clearHistoryBtn').addEventListener('click', function() {
+            if (confirm('Yakin ingin menghapus semua riwayat?')) {
+                history = [];
+                links = {};
+                saveData();
+                updateHistoryList();
+            }
+        });
+
+        document.getElementById('generateBtn').addEventListener('click', function() {
             hideError();
             
             const originalUrl = document.getElementById('originalUrl').value.trim();
@@ -218,7 +304,7 @@
             }
 
             if (!isValidUrl(originalUrl)) {
-                showError('URL tidak valid. Pastikan URL dimulai dengan http:// atau https://');
+                showError('URL tidak valid. Pastikan ada nama domain dengan titik (contoh: google.com)');
                 return;
             }
 
@@ -232,13 +318,22 @@
                 return;
             }
 
+            const normalizedUrl = normalizeUrl(originalUrl);
+
             document.getElementById('generateBtn').disabled = true;
             document.getElementById('loadingDiv').classList.remove('hidden');
             document.getElementById('resultDiv').classList.add('hidden');
 
-            setTimeout(async () => {
-                links[customName] = originalUrl;
-                await saveLinks();
+            setTimeout(() => {
+                links[customName] = normalizedUrl;
+                
+                history.push({
+                    name: customName,
+                    original: normalizedUrl,
+                    date: new Date().toLocaleString('id-ID')
+                });
+                
+                saveData();
 
                 const shortenedUrl = `${domain}/${customName}`;
                 document.getElementById('shortenedLink').href = shortenedUrl;
@@ -248,7 +343,7 @@
                 document.getElementById('resultDiv').classList.remove('hidden');
                 document.getElementById('generateBtn').disabled = false;
 
-                updateSavedLinksList();
+                updateHistoryList();
             }, 1500);
         });
 
@@ -276,9 +371,8 @@
             e.target.value = e.target.value.replace(/[^a-zA-Z0-9-_]/g, '');
         });
 
-        loadLinks().then(() => {
-            checkRedirect();
-        });
+        loadData();
+        checkRedirect();
     </script>
 </body>
-</html>
+    </html>
