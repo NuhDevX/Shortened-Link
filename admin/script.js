@@ -21,7 +21,7 @@
         let editingLinkKey = null;
         let originalEditKey = null;
 
-        const domain = window.location.origin + window.location.pathname.replace('admin-pemendek-link.html', 'pemendek-link.html');
+        const domain = "https://s.nuhweb.site/";
 
         const Utils = {
             showToast(message, type = 'success') {
