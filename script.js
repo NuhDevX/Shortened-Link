@@ -14,7 +14,7 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    const domain = window.location.origin + window.location.pathname;
+    const domain = "https://s.nuhweb.site";
     document.getElementById('domainPrefix').textContent = domain + '?id=';
 
     function showError(message) {
