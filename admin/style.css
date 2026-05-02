@@ -2,33 +2,26 @@
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-20px); }
         }
-        
         @keyframes twinkle {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.3; }
         }
-        
         @keyframes slideIn {
             from { transform: translateX(400px); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
-        
         @keyframes slideOut {
             from { transform: translateX(0); opacity: 1; }
             to { transform: translateX(400px); opacity: 0; }
         }
-        
         .animate-fadeIn { animation: fadeIn 0.5s ease-out; }
         .animate-float { animation: float 3s ease-in-out infinite; }
-        
         .toast { animation: slideIn 0.3s ease-out; }
         .toast.hide { animation: slideOut 0.3s ease-out; }
-        
         .star {
             position: absolute;
             width: 2px;
@@ -37,33 +30,26 @@
             border-radius: 50%;
             animation: twinkle 3s ease-in-out infinite;
         }
-        
         body {
             background: linear-gradient(to bottom, #0a0e27 0%, #1a1a3e 50%, #2d1b4e 100%);
             position: relative;
             overflow-x: hidden;
         }
-        
         .link-table {
             opacity: 0;
             transform: translateY(20px);
             transition: all 0.3s ease;
         }
-        
         .link-table.show {
             opacity: 1;
             transform: translateY(0);
         }
-        
         .link-row {
             transition: all 0.2s ease;
         }
-        
         .link-row:hover {
             background: rgba(139, 92, 246, 0.1);
-            transform: scale(1.01);
         }
-        
         .modal {
             display: none;
             position: fixed;
@@ -74,14 +60,12 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.95);
         }
-        
         .modal.active {
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
         }
-
         .back-button {
             position: fixed;
             top: 20px;
@@ -102,8 +86,11 @@
             box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
             transition: all 0.3s ease;
         }
-
         .back-button:hover {
             transform: translateX(-5px);
             box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6);
-          }
+        }
+
+        .countdown-detail { display: none; }
+        .countdown-detail.show { display: inline; }
+        .countdown-simple.hide { display: none; }
