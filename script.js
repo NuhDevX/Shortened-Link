@@ -28,6 +28,17 @@
         document.getElementById('errorMsg').classList.add('hidden');
     }
 
+    function isValidUrl(url) {
+    try {
+        const normalized = url.startsWith('http') ? url : 'https://' + url;
+        const parsed = new URL(normalized);
+        return (parsed.protocol === 'http:' || parsed.protocol === 'https:') 
+               && parsed.hostname.includes('.');
+    } catch {
+        return false;
+    }
+    }
+
     // ===== REDIRECT WITH LOADING OVERLAY =====
     async function checkRedirect() {
         const urlParams = new URLSearchParams(window.location.search);
@@ -69,6 +80,11 @@
             return;
         }
 
+        if (!isValidUrl(originalUrl)) {
+           showError('URL tidak valid! Contoh: google.com atau https://example.com');
+            return;
+        }
+        
         const normalizedUrl = originalUrl.startsWith('http') ? originalUrl : 'https://' + originalUrl;
 
         document.getElementById('generateBtn').disabled = true;
