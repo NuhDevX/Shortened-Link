@@ -1,4 +1,4 @@
-r<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -6,12 +6,10 @@ r<!DOCTYPE html>
     <title>Admin Panel - Pemendek Link | NUHWEB</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" type="image/x-icon" href="https://nuhweb.site/aset/icon.jpg" />
-    <link rel="stylesheet" href="https://s.nuhweb.site/admin/style.css">
-
+<link rel="stylesheet" href="https://s.nuhweb.site/admin/style.css">
 </head>
 <body class="min-h-screen">
     <div id="stars"></div>
-
     <div id="toastContainer" class="fixed top-4 right-4 z-[200] space-y-3"></div>
 
     <a href="https://nuhweb.site/tools/pemendek" class="back-button" id="backButton" style="display: none;">
@@ -31,21 +29,17 @@ r<!DOCTYPE html>
                         </svg>
                     </div>
                 </div>
-
                 <h1 class="text-3xl font-bold text-white text-center mb-2">🔐 Admin Panel</h1>
                 <p class="text-purple-200 text-center mb-8">Pemendek Link - NUHWEB</p>
-
                 <form id="loginForm" class="space-y-4">
                     <div>
                         <label class="block text-purple-200 mb-2 text-sm">Email</label>
                         <input type="email" id="loginEmail" class="w-full px-4 py-3 rounded-lg bg-purple-900/30 border border-purple-500/50 text-white placeholder-purple-300/50 focus:outline-none focus:border-purple-500" placeholder="Masukkan email admin" required />
                     </div>
-
                     <div>
                         <label class="block text-purple-200 mb-2 text-sm">Password</label>
                         <input type="password" id="loginPassword" class="w-full px-4 py-3 rounded-lg bg-purple-900/30 border border-purple-500/50 text-white placeholder-purple-300/50 focus:outline-none focus:border-purple-500" placeholder="Masukkan password" required />
                     </div>
-
                     <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white py-3 rounded-lg transition shadow-lg font-semibold">
                         Login
                     </button>
@@ -67,16 +61,23 @@ r<!DOCTYPE html>
                     </div>
                     <h1 class="text-4xl md:text-5xl font-bold text-white mb-2">🔗 Admin Panel</h1>
                     <p class="text-purple-200 text-lg">Kelola Link yang Dipendekkan</p>
-                    <div class="mt-4 flex items-center justify-center gap-4 text-purple-300">
+                    <div class="mt-4 flex items-center justify-center gap-6 text-purple-300 flex-wrap">
                         <div class="flex items-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
                             </svg>
                             <span id="totalLinks" class="font-semibold">0 Link</span>
                         </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+                            <span id="activeCount" class="font-semibold text-green-300">0 Aktif</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 bg-red-400 rounded-full"></span>
+                            <span id="expiredCount" class="font-semibold text-red-300">0 Kadaluarsa</span>
+                        </div>
                     </div>
                 </div>
-
                 <button id="logoutBtn" class="bg-red-600/80 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
@@ -90,6 +91,11 @@ r<!DOCTYPE html>
             <div class="bg-gradient-to-br from-purple-900/40 to-blue-900/40 backdrop-blur-md rounded-2xl shadow-2xl p-4 border border-purple-500/30">
                 <div class="flex gap-3 flex-wrap">
                     <input type="text" id="searchInput" placeholder="🔍 Cari berdasarkan nama link atau URL..." class="flex-1 min-w-[200px] px-4 py-2 rounded-lg bg-purple-900/30 border border-purple-500/50 text-white placeholder-purple-300/50 focus:outline-none focus:border-purple-500" />
+                    <select id="filterStatus" class="px-4 py-2 rounded-lg bg-purple-900/30 border border-purple-500/50 text-white focus:outline-none focus:border-purple-500">
+                        <option value="all">Semua Status</option>
+                        <option value="active">Aktif</option>
+                        <option value="expired">Kadaluarsa</option>
+                    </select>
                     <button id="refreshBtn" class="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-6 py-2 rounded-lg transition flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
@@ -106,10 +112,11 @@ r<!DOCTYPE html>
                     <table class="w-full">
                         <thead class="bg-purple-900/60">
                             <tr>
-                                <th class="px-6 py-4 text-left text-purple-200 font-semibold">Nama Custom</th>
-                                <th class="px-6 py-4 text-left text-purple-200 font-semibold">Link Pendek</th>
-                                <th class="px-6 py-4 text-left text-purple-200 font-semibold">Link Asli</th>
-                                <th class="px-6 py-4 text-center text-purple-200 font-semibold">Aksi</th>
+                                <th class="px-4 py-4 text-left text-purple-200 font-semibold text-sm">Nama Custom</th>
+                                <th class="px-4 py-4 text-left text-purple-200 font-semibold text-sm">Link Pendek</th>
+                                <th class="px-4 py-4 text-left text-purple-200 font-semibold text-sm">Link Asli</th>
+                                <th class="px-4 py-4 text-center text-purple-200 font-semibold text-sm">Status & Waktu</th>
+                                <th class="px-4 py-4 text-center text-purple-200 font-semibold text-sm">Aksi</th>
                             </tr>
                         </thead>
                         <tbody id="linksTableBody" class="divide-y divide-purple-500/20">
@@ -117,12 +124,12 @@ r<!DOCTYPE html>
                     </table>
                 </div>
             </div>
-            
+
             <div id="loadingState" class="text-center text-purple-200 py-12">
                 <div class="animate-spin w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4"></div>
                 <p>Memuat data link...</p>
             </div>
-            
+
             <div id="emptyState" class="text-center text-purple-200 py-12" style="display: none;">
                 <div class="bg-gradient-to-br from-purple-900/40 to-blue-900/40 backdrop-blur-md rounded-2xl shadow-2xl p-12 border border-purple-500/30">
                     <svg class="w-20 h-20 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -141,32 +148,26 @@ r<!DOCTYPE html>
                 <h2 class="text-2xl font-bold text-white">✏️ Edit Link</h2>
                 <button id="closeEditBtn" class="text-white hover:text-purple-400 text-3xl">&times;</button>
             </div>
-            
             <div class="space-y-6">
                 <div>
                     <label class="block text-purple-200 mb-2 font-medium">Nama Custom Link</label>
                     <div class="flex items-center bg-purple-900/30 border border-purple-500/50 rounded-lg overflow-hidden">
-                        <span class="px-3 py-3 bg-purple-800/50 text-purple-200 text-sm" id="editDomainPrefix">
-                            loading...
-                        </span>
+                        <span class="px-3 py-3 bg-purple-800/50 text-purple-200 text-sm" id="editDomainPrefix">loading...</span>
                         <input type="text" id="editCustomName" class="flex-1 px-3 py-3 outline-none bg-transparent text-white placeholder-purple-300/50" placeholder="nama-link" />
                     </div>
                     <p class="text-purple-300/70 text-xs mt-1">⚠️ Hanya huruf, angka, dash (-) dan underscore (_)</p>
                 </div>
-
                 <div>
                     <label class="block text-purple-200 mb-2 font-medium">URL Tujuan</label>
                     <input type="text" id="editOriginalUrl" class="w-full px-4 py-3 rounded-lg bg-purple-900/30 border border-purple-500/50 text-white placeholder-purple-300/50 focus:outline-none focus:border-purple-500" placeholder="https://example.com" />
                     <p class="text-purple-300/70 text-xs mt-1">💡 Bisa dengan atau tanpa https://</p>
                 </div>
-
                 <div id="editErrorMsg" class="hidden bg-red-900/50 border border-red-500/50 text-red-200 px-4 py-3 rounded-lg text-sm flex items-start gap-2">
                     <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
                     <span id="editErrorText"></span>
                 </div>
-
                 <div class="flex gap-3">
                     <button id="saveEditBtn" class="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white py-3 rounded-lg transition shadow-lg font-semibold">
                         💾 Simpan Perubahan
@@ -190,7 +191,7 @@ r<!DOCTYPE html>
             starsContainer.appendChild(star);
         }
     </script>
-
-    <script type="module" src="https://s.nuhweb.site/admin/script.js"></script>
+<script type="module" src="https://s.nuhweb.site/admin/script.js"></script>
 </body>
-                              </html>
+    </html>
+        
