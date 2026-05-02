@@ -7,37 +7,56 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" type="image/x-icon" href="https://nuhweb.site/aset/icon.jpg" />
     <link rel="stylesheet" href="https://s.nuhweb.site/style.css">
-</style>
 </head>
 <body class="min-h-screen">
     <div id="stars"></div>
->
+
     <div id="redirectOverlay">
         <div class="redirect-particle" style="width:8px;height:8px;top:20%;left:15%;animation-delay:0s;animation-duration:3.5s"></div>
         <div class="redirect-particle" style="width:5px;height:5px;top:70%;left:80%;animation-delay:1s;animation-duration:4s"></div>
         <div class="redirect-particle" style="width:6px;height:6px;top:30%;left:75%;animation-delay:0.5s;animation-duration:3s"></div>
         <div class="redirect-particle" style="width:4px;height:4px;top:65%;left:20%;animation-delay:2s;animation-duration:5s"></div>
         <div class="redirect-particle" style="width:7px;height:7px;top:80%;left:50%;animation-delay:1.5s;animation-duration:3.8s"></div>
-
-        <!-- Orbit loader -->
         <div class="orbit-container">
             <div class="orbit-ring"></div>
             <div class="orbit-ring"></div>
             <div class="orbit-ring"></div>
             <div class="orbit-core"></div>
         </div>
-
-        <!-- Label -->
         <div class="redirect-label">
             Mengalihkan ke link tujuan
             <span class="dot"></span>
             <span class="dot"></span>
             <span class="dot"></span>
         </div>
-
-        <!-- Progress bar -->
         <div class="progress-bar-wrap">
             <div class="progress-bar-fill"></div>
+        </div>
+    </div>
+
+    <div id="expiredPage">
+        <div class="relative z-10 flex flex-col items-center justify-center p-6 text-center max-w-md mx-auto">
+            <div class="mb-6">
+                <div class="w-24 h-24 bg-gradient-to-br from-red-600/30 to-orange-600/30 border border-red-500/40 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-12 h-12 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <h1 class="text-3xl font-bold text-white mb-3">ðŸ”— URL Tidak Tersedia</h1>
+                <p class="text-red-300 text-lg font-medium mb-2">URL tidak ada atau sudah kadaluarsa</p>
+                <p class="text-purple-300 text-sm">Link yang Anda coba akses tidak ditemukan atau masa aktifnya telah habis. Silahkan coba lagi dengan link yang masih aktif.</p>
+            </div>
+            <div class="bg-purple-900/30 border border-purple-500/30 rounded-xl p-4 mb-6 w-full">
+                <div class="flex items-center gap-3 text-purple-200 text-sm">
+                    <svg class="w-5 h-5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span>Kemungkinan link ini sudah melewati masa aktif 1 bulan atau belum pernah dibuat.</span>
+                </div>
+            </div>
+            <a href="https://s.nuhweb.site" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition shadow-lg text-center block">
+                ðŸ  Buat Link Baru
+            </a>
         </div>
     </div>
 
@@ -60,13 +79,24 @@
             <h1 class="text-3xl font-bold text-center text-white mb-2">Pemendek Link</h1>
             <p class="text-center text-purple-200 mb-8">Jelajahi internet dengan link yang lebih singkat</p>
             
-            <div class="bg-yellow-900/30 border border-yellow-500/50 rounded-lg p-4 mb-6">
+            <div class="bg-yellow-900/30 border border-yellow-500/50 rounded-lg p-4 mb-4">
                 <div class="flex items-start gap-3">
                     <svg class="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                     </svg>
                     <p class="text-yellow-200 text-sm">
                         <strong>PENTING:</strong> Link tidak bisa ditimpa!, jadi Pastikan Anda menggunakan nama link yang unik!
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-blue-900/30 border border-blue-500/50 rounded-lg p-4 mb-6">
+                <div class="flex items-start gap-3">
+                    <svg class="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <p class="text-blue-200 text-sm">
+                        <strong>INFO:</strong> Link yang dibuat akan <strong>kadaluarsa dalam 1 bulan</strong>. Setelah itu, link tidak dapat diakses dan akan dihapus permanen setelah 7 hari.
                     </p>
                 </div>
             </div>
@@ -133,7 +163,7 @@
                         </svg>
                         Link pendek Anda:
                     </p>
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-2 mb-3">
                         <div class="flex-1 bg-purple-900/50 px-4 py-3 rounded-lg border border-purple-500/30 break-all">
                             <a id="shortenedLink" href="#" target="_blank" rel="noopener noreferrer" class="text-purple-300 hover:text-purple-100 font-medium"></a>
                         </div>
@@ -150,9 +180,23 @@
                             </svg>
                         </button>
                     </div>
+                    
+                    <div class="bg-purple-900/40 border border-purple-500/30 rounded-lg p-3 mb-3 space-y-1">
+                        <div class="flex items-center gap-2 text-sm">
+                            <span class="text-purple-300">Status:</span>
+                            <span class="inline-flex items-center gap-1 bg-green-600/30 text-green-300 border border-green-500/40 px-2 py-0.5 rounded-full text-xs font-semibold">
+                                <span class="w-1.5 h-1.5 bg-green-400 rounded-full inline-block"></span>
+                                Aktif
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm">
+                            <span class="text-purple-300">Akan kadaluarsa dalam:</span>
+                            <span id="expiryInfo" class="text-yellow-300 font-semibold text-xs">30 hari</span>
+                        </div>
+                    </div>
                     <button
                         id="resetBtn"
-                        class="mt-4 w-full bg-purple-800/50 hover:bg-purple-700/50 text-purple-200 py-2 rounded-lg transition text-sm border border-purple-500/30 flex items-center justify-center gap-2"
+                        class="mt-2 w-full bg-purple-800/50 hover:bg-purple-700/50 text-purple-200 py-2 rounded-lg transition text-sm border border-purple-500/30 flex items-center justify-center gap-2"
                     >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -164,6 +208,8 @@
         </div>
     </div>
 
+    
 <script type="module" src="https://s.nuhweb.site/script.js"></script>
 </body>
-</html>
+    </html>
+                        
