@@ -1,5 +1,5 @@
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, set, get, remove, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDuZksFmHTAEEB9d8gbHXrEw3AL0W487JQ",
@@ -17,6 +17,9 @@
     const domain = "https://s.nuhweb.site";
     document.getElementById('domainPrefix').textContent = domain + '?id=';
 
+    const ONE_MONTH_MS = 30 * 24 * 60 * 60 * 1000;
+    const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
+
     function showError(message) {
         const errorDiv = document.getElementById('errorMsg');
         document.getElementById('errorText').textContent = message;
@@ -29,24 +32,22 @@
     }
 
     function isValidUrl(url) {
-    try {
-        const normalized = url.startsWith('http') ? url : 'https://' + url;
-        const parsed = new URL(normalized);
-        return (parsed.protocol === 'http:' || parsed.protocol === 'https:') 
-               && parsed.hostname.includes('.');
-    } catch {
-        return false;
-    }
+        try {
+            const normalized = url.startsWith('http') ? url : 'https://' + url;
+            const parsed = new URL(normalized);
+            return (parsed.protocol === 'http:' || parsed.protocol === 'https:') 
+                   && parsed.hostname.includes('.');
+        } catch {
+            return false;
+        }
     }
 
-    // ===== REDIRECT WITH LOADING OVERLAY =====
     async function checkRedirect() {
         const urlParams = new URLSearchParams(window.location.search);
         const shortId = urlParams.get('id');
 
         if (!shortId) return;
 
-        // Show overlay immediately
         const overlay = document.getElementById('redirectOverlay');
         overlay.classList.add('visible');
 
@@ -54,19 +55,53 @@
         try {
             const snapshot = await get(child(dbRef, `links/${shortId}`));
             if (snapshot.exists()) {
-                // Small delay so animation is visible
+                const data = snapshot.val();
+
+                let linkData;
+                if (typeof data === 'string') {
+                    linkData = { url: data, createdAt: Date.now(), status: 'active' };
+                } else {
+                    linkData = data;
+                }
+
+                const now = Date.now();
+                const createdAt = linkData.createdAt || now;
+                const expiresAt = linkData.expiresAt || (createdAt + ONE_MONTH_MS);
+                const status = linkData.status || 'active';
+
+                if (status === 'expired' || now > expiresAt) {
+                    if (status !== 'expired') {
+                        const deletedAt = now + SEVEN_DAYS_MS;
+                        await set(ref(db, `links/${shortId}`), {
+                            ...linkData,
+                            status: 'expired',
+                            expiredAt: now,
+                            deletedAt: deletedAt
+                        });
+                    }
+                    overlay.classList.remove('visible');
+                    showExpiredPage();
+                    return;
+                }
+
                 setTimeout(() => {
-                    window.location.href = snapshot.val();
+                    window.location.href = linkData.url;
                 }, 800);
             } else {
                 overlay.classList.remove('visible');
-                showError("Link tidak ditemukan atau sudah kedaluwarsa.");
+                showExpiredPage();
             }
         } catch (error) {
             console.error(error);
             overlay.classList.remove('visible');
             showError("Terjadi kesalahan saat mengakses link.");
         }
+    }
+
+    function showExpiredPage() {
+        document.getElementById('expiredPage').classList.add('visible');
+        document.querySelector('.flex.items-center.justify-center.min-h-screen').style.display = 'none';
+        document.querySelector('.back-button').style.display = 'none';
     }
 
     document.getElementById('generateBtn').addEventListener('click', async function() {
@@ -101,11 +136,20 @@
                 return;
             }
 
-            await set(ref(db, 'links/' + customName), normalizedUrl);
+            const now = Date.now();
+            const expiresAt = now + ONE_MONTH_MS;
+
+            await set(ref(db, 'links/' + customName), {
+                url: normalizedUrl,
+                createdAt: now,
+                expiresAt: expiresAt,
+                status: 'active'
+            });
 
             const shortenedUrl = `${domain}?id=${customName}`;
             document.getElementById('shortenedLink').href = shortenedUrl;
             document.getElementById('shortenedLink').textContent = shortenedUrl;
+            document.getElementById('expiryInfo').textContent = '30 hari';
 
             document.getElementById('loadingDiv').classList.add('hidden');
             document.getElementById('resultDiv').classList.remove('hidden');
@@ -140,7 +184,6 @@
         e.target.value = e.target.value.replace(/[^a-zA-Z0-9-_]/g, '');
     });
 
-    // Stars background
     const starsContainer = document.getElementById('stars');
     for (let i = 0; i < 100; i++) {
         const star = document.createElement('div');
