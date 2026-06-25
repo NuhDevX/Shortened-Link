@@ -15,10 +15,10 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
     const db = getDatabase(app);
 
     const domain = "https://s.nuhweb.site";
-    document.getElementById('domainPrefix').textContent = domain + '?id=';
+    document.getElementById('domainPrefix').textContent = domain + '/';
 
-    const ONE_MONTH_MS = 30 * 24 * 60 * 60 * 1000;
-    const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
+    const THREE_MONTH_MS = 90 * 24 * 60 * 60 * 1000;
+    const TWO_MONTH_MS = 60 * 24 * 60 * 60 * 1000;
 
     function showError(message) {
         const errorDiv = document.getElementById('errorMsg');
@@ -43,11 +43,9 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
     }
 
     async function checkRedirect() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const shortId = urlParams.get('id');
+        const shortId = window.location.pathname.replace(/^\/|\/$/g, '');
 
-        if (!shortId) return;
-
+        if (!shortId || shortId === 'index.html') return;
         const overlay = document.getElementById('redirectOverlay');
         overlay.classList.add('visible');
 
@@ -66,12 +64,12 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
 
                 const now = Date.now();
                 const createdAt = linkData.createdAt || now;
-                const expiresAt = linkData.expiresAt || (createdAt + ONE_MONTH_MS);
+                const expiresAt = linkData.expiresAt || (createdAt + THREE_MONTH_MS);
                 const status = linkData.status || 'active';
 
                 if (status === 'expired' || now > expiresAt) {
                     if (status !== 'expired') {
-                        const deletedAt = now + SEVEN_DAYS_MS;
+                        const deletedAt = now + TWO_MONTH_MS;
                         await set(ref(db, `links/${shortId}`), {
                             ...linkData,
                             status: 'expired',
@@ -137,7 +135,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
             }
 
             const now = Date.now();
-            const expiresAt = now + ONE_MONTH_MS;
+            const expiresAt = now + THREE_MONTH_MS;
 
             await set(ref(db, 'links/' + customName), {
                 url: normalizedUrl,
@@ -146,7 +144,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
                 status: 'active'
             });
 
-            const shortenedUrl = `${domain}?id=${customName}`;
+            const shortenedUrl = `${domain}/${customName}`;
             document.getElementById('shortenedLink').href = shortenedUrl;
             document.getElementById('shortenedLink').textContent = shortenedUrl;
             document.getElementById('expiryInfo').textContent = '30 hari';
