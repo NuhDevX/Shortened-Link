@@ -23,8 +23,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
         let countdownIntervals = {};
 
         const domain = "https://s.nuhweb.site";
-        const ONE_MONTH_MS = 30 * 24 * 60 * 60 * 1000;
-        const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
+        const THREE_MONTH_MS = 90 * 24 * 60 * 60 * 1000;
+        const TWO_MONTH_MS = 60 * 24 * 60 * 60 * 1000;
 
         const Utils = {
             showToast(message, type = 'success') {
@@ -150,7 +150,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
                 if (link.isLegacy) continue;
 
                 if (link.status === 'active' && link.expiresAt && now > link.expiresAt) {
-                    const deletedAt = now + SEVEN_DAYS_MS;
+                    const deletedAt = now + TWO_MONTH_MS;
                     updates.push(set(ref(db, `links/${link.key}`), {
                         url: link.url,
                         createdAt: link.createdAt,
@@ -301,7 +301,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
                 const now = Date.now();
 
                 tbody.innerHTML = filteredLinks.map(link => {
-                    const shortUrl = `${domain}?id=${link.key}`;
+                    const shortUrl = `${domain}/${link.key}`;
                     const isActive = link.status === 'active';
                     const isLegacy = link.isLegacy;
 
@@ -360,7 +360,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
                             </button>`;
                     } else {
                         actionButtons = `
-                            <button data-action="renew" data-key="${link.key}" class="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-3 py-2 rounded-lg transition text-xs font-semibold flex items-center gap-1" title="Perbarui link (perpanjang 1 bulan)">
+                            <button data-action="renew" data-key="${link.key}" class="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-3 py-2 rounded-lg transition text-xs font-semibold flex items-center gap-1" title="Perbarui link (perpanjang 3 bulan)">
                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                                 Perbarui
                             </button>
@@ -450,7 +450,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
                 if (!link) return;
 
                 const now = Date.now();
-                const newExpiresAt = now + ONE_MONTH_MS;
+                const newExpiresAt = now + THREE_MONTH_MS;
 
                 try {
                     await set(ref(db, `links/${key}`), {
@@ -522,7 +522,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
             openEdit(key, url) {
                 editingLinkKey = key;
                 originalEditKey = key;
-                document.getElementById('editDomainPrefix').textContent = domain + '?id=';
+                document.getElementById('editDomainPrefix').textContent = domain + '/';
                 document.getElementById('editCustomName').value = key;
                 document.getElementById('editOriginalUrl').value = url;
                 this.hideEditError();
