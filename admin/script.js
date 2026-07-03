@@ -26,37 +26,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
         const THREE_MONTH_MS = 90 * 24 * 60 * 60 * 1000;
         const TWO_MONTH_MS = 60 * 24 * 60 * 60 * 1000;
 
-        const Utils = {
-            showToast(message, type = 'success') {
-                const container = document.getElementById('toastContainer');
-                const toast = document.createElement('div');
-                const icons = {
-                    success: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`,
-                    error: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>`,
-                    warning: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>`,
-                    info: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`
-                };
-                const colors = {
-                    success: 'from-green-600 to-emerald-600',
-                    error: 'from-red-600 to-rose-600',
-                    warning: 'from-yellow-600 to-orange-600',
-                    info: 'from-blue-600 to-cyan-600'
-                };
-                toast.className = `toast flex items-center gap-3 bg-gradient-to-r ${colors[type]} text-white px-6 py-4 rounded-lg shadow-2xl min-w-[300px]`;
-                toast.innerHTML = `
-                    ${icons[type]}
-                    <span class="flex-1 font-medium">${message}</span>
-                    <button onclick="this.parentElement.remove()" class="hover:bg-white/20 rounded p-1 transition">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                    </button>
-                `;
-                container.appendChild(toast);
-                setTimeout(() => {
-                    toast.classList.add('hide');
-                    setTimeout(() => toast.remove(), 300);
-                }, 4000);
-            },
-
+        const Helper = {
             escapeHtml(text) {
                 const div = document.createElement('div');
                 div.textContent = String(text || '');
@@ -134,7 +104,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
                     setTimeout(() => LinksManager.loadLinks(), 2000);
                     return;
                 }
-                const f = Utils.formatCountdown(left);
+                const f = Helper.formatCountdown(left);
                 simpleEl.textContent = f.simple;
                 detailEl.textContent = f.detail;
             }
@@ -242,7 +212,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
                     if (snapshot.exists()) {
                         const data = snapshot.val();
                         Object.keys(data).forEach(key => {
-                            const normalized = Utils.normalizeLink(key, data[key]);
+                            const normalized = Helper.normalizeLink(key, data[key]);
                             allLinks.push(normalized);
                         });
                     }
@@ -326,7 +296,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
                         countdownSection = `<div class="text-xs text-purple-400 mt-1">Link lama (tanpa kadaluarsa)</div>`;
                     } else if (isActive && link.expiresAt) {
                         const msLeft = link.expiresAt - now;
-                        const f = Utils.formatCountdown(msLeft > 0 ? msLeft : 0);
+                        const f = Helper.formatCountdown(msLeft > 0 ? msLeft : 0);
                         countdownSection = `
                             <div class="mt-1 text-xs text-yellow-300">
                                 <span class="text-purple-300">Kadaluarsa:</span>
@@ -336,7 +306,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
                             </div>`;
                     } else if (!isActive && link.deletedAt) {
                         const msLeft = link.deletedAt - now;
-                        const f = Utils.formatCountdown(msLeft > 0 ? msLeft : 0);
+                        const f = Helper.formatCountdown(msLeft > 0 ? msLeft : 0);
                         countdownSection = `
                             <div class="mt-1 text-xs text-red-300">
                                 <span class="text-purple-300">Dihapus dalam:</span>
@@ -346,13 +316,13 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
                             </div>`;
                     }
 
-                    let actionButtons = '';
+                  let actionButtons = '';
                     if (isActive || isLegacy) {
                         actionButtons = `
                             <button data-action="copy" data-url="${shortUrl}" class="bg-blue-600/80 hover:bg-blue-700 text-white p-2 rounded-lg transition" title="Copy link">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                             </button>
-                            <button data-action="edit" data-key="${link.key}" data-url="${Utils.escapeHtml(link.url)}" class="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white p-2 rounded-lg transition" title="Edit">
+                            <button data-action="edit" data-key="${link.key}" data-url="${Helper.escapeHtml(link.url)}" class="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white p-2 rounded-lg transition" title="Edit">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                             </button>
                             <button data-action="delete" data-key="${link.key}" class="bg-red-600/80 hover:bg-red-700 text-white p-2 rounded-lg transition" title="Hapus">
@@ -373,7 +343,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
                         <tr class="link-row ${!isActive && !isLegacy ? 'opacity-70' : ''}">
                             <td class="px-4 py-4">
                                 <div class="flex items-center gap-2">
-                                    <span class="text-white font-mono font-semibold text-sm">${Utils.escapeHtml(link.key)}</span>
+                                    <span class="text-white font-mono font-semibold text-sm">${Helper.escapeHtml(link.key)}</span>
                                     <button onclick="navigator.clipboard.writeText('${link.key}')" class="text-purple-400 hover:text-purple-300 transition" title="Copy nama">
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                                     </button>
@@ -382,12 +352,12 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
                             <td class="px-4 py-4">
                                 <a href="${shortUrl}" target="_blank" class="text-blue-400 hover:text-blue-300 transition flex items-center gap-1 text-sm" title="${shortUrl}">
                                     <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                                    <span class="font-mono">${Utils.escapeHtml(Utils.truncateUrl(shortUrl, 35))}</span>
+                                    <span class="font-mono">${Helper.escapeHtml(Helper.truncateUrl(shortUrl, 35))}</span>
                                 </a>
                             </td>
                             <td class="px-4 py-4">
                                 <a href="${link.url}" target="_blank" class="text-purple-300 hover:text-purple-200 transition flex items-center gap-1 text-sm" title="${link.url}">
-                                    <span>${Utils.escapeHtml(Utils.truncateUrl(link.url, 40))}</span>
+                                    <span>${Helper.escapeHtml(Helper.truncateUrl(link.url, 40))}</span>
                                     <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                                 </a>
                             </td>
@@ -445,7 +415,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
                 this.render();
             },
 
-            async renewLink(key) {
+ async renewLink(key) {
                 const link = allLinks.find(l => l.key === key);
                 if (!link) return;
 
@@ -475,7 +445,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
                         <h3 class="text-2xl font-bold text-white mb-4">🗑️ Konfirmasi Hapus</h3>
                         <p class="next-door pre-order for the day mb-2">Apakah Anda yakin ingin menghapus link ini?</p>
                         <div class="bg-purple-900/30 rounded-lg p-3 mb-6 border border-purple-500/30">
-                            <p class="text-purple-300 text-sm font-mono break-all"><strong>Nama:</strong> ${Utils.escapeHtml(key)}</p>
+                            <p class="text-purple-300 text-sm font-mono break-all"><strong>Nama:</strong> ${Helper.escapeHtml(key)}</p>
                         </div>
                         <p class="text-yellow-300 text-sm mb-6">⚠️ Tindakan ini tidak dapat dibatalkan!</p>
                         <div class="flex gap-3">
@@ -491,8 +461,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
                         await remove(ref(db, `links/${key}`));
                         modal.remove();
                         this.loadLinks();
-                        Utils.showToast('✅ Link berhasil dihapus!', 'success');
-                    } catch (error) {
+                        } catch (error) {
                         console.error('Error:', error);
                         Utils.showToast('❌ Gagal menghapus link', 'error');
                     }
@@ -625,3 +594,4 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
         });
 
         Auth.init();
+        
